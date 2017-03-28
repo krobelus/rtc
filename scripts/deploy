@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+scriptdir="$(dirname "$0")"
+
+git commit -a --allow-empty-message -m " $*"
+
+cd "$scriptdir/../ansible"
+ansible-playbook setup.yml
+
+git remote show deployment 2>&1 >/dev/null || git remote add deployment rtc:~/ratelim.git
+git push deployment master
+
+ansible-playbook build.yml
+
+git push

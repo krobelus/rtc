@@ -1,0 +1,47 @@
+# -*- yaml -*-
+#
+---
+- hosts: target
+
+  tasks:
+    - name: checkout repo
+      git: repo={{ repo }}.git dest={{ repo }}
+      notify:
+        - build rtc
+        - build dspr-trim
+        - build drat-trim
+        - build drabt
+        - build lingeling
+        - add checkers && solvers to path
+
+  handlers: 
+
+        - name: build rtc
+          shell: make
+          args:
+            chdir: "{{ repo }}/rtc"
+
+        - name: build dspr-trim
+          shell: which dspr-trim || (gcc -O2 -o dspr-trim dspr-trim.c)
+          args:
+            chdir: "{{ repo }}/checkers"
+
+        - name: build drat-trim
+          shell: which drat-trim || (gcc -O2 -o drat-trim drat-trim.c)
+          args:
+            chdir: "{{ repo }}/checkers"
+
+        - name: build drabt
+          shell: which drabt || (tar xf drabt-001.tar.bz2 drabt-001 && cd drabt-001 && ./configure.sh && make)
+          args:
+            chdir: "{{ repo }}/checkers"
+
+        - name: build lingeling
+          shell: which lingeling || (tar xf lingeling-bbc-9230380-160525.tar.gz lingeling-bbc-9230380-160525 && cd lingeling-bbc-9230380-160525 && ./configure.sh && make)
+          args:
+            chdir: "{{ repo }}/solvers"
+
+        - name: add checkers && solvers to path
+          shell: ln -f checkers/{dspr-trim,drat-trim,drabt-001/drabt} solvers/lingeling-bbc-9230380-160525/lingeling /usr/bin
+          args:
+            chdir: "{{ repo }}"

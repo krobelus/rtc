@@ -1,0 +1,28 @@
+# -*- yaml -*-
+#
+---
+- hosts: target
+
+  tasks:
+    - name: install dependencies
+      pacman: state=present name={{ item }}
+      with_items:
+        - bash
+        - gcc
+        - make
+        - git
+        - perl
+        - python
+        - python2
+        - tmux
+        - bc
+        - dmidecode
+
+    - name: create repository
+      file: path={{ root }}/{{ project }}.git state=directory
+      notify:
+        - create bare repo
+
+  handlers: 
+        - name: create bare repo
+          shell: git init --bare {{ root }}/{{ project }}.git

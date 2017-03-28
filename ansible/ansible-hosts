@@ -1,0 +1,21 @@
+[target]
+rtc
+; cat >> ~/.ssh/config
+; Host rtc
+;     User root
+;     HostName rtc.csproject.org
+;     Port 1437
+
+; [remote]
+; rtc.csproject.org
+
+; [local]
+; 192.168.1.2
+
+[all:vars]
+ansible_user = root
+ansible_python_interpreter = /usr/bin/python2
+archive = archive.zip
+root = /root
+project = ratelim
+repo = "{{ root }}/{{ project }}"

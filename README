@@ -1,0 +1,24 @@
+To build rtc run "make".
+
+Basic usage:
+
+    ./rtc formula.cnf [preprocessed] [proof]
+
+The formula minus the eliminated clauses is written back into preprocessed.  The
+list of the eliminated clauses is written to the file specified by proof.
+
+Configuration is done in config.mk, or in config.def.mk if the former does not exist.
+
+Notes for config option PARALLEL:
+
+For cilk support, you need a working installation of cilk in ./cilkplus/.
+Additionally for compilation and execution this is required:
+
+    source cilk.sh
+
+If PARALLEL is set to either CILK or LACE, THREADS will be set to $(nproc)
+
+
+scripts/run.sh: creates db.sqlite if it does not exist and fills it with data
+
+scripts/plot.py creates all plots/*.png based on measurements.sqlite
